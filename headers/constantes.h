@@ -1,0 +1,6 @@
+#ifndef CONSTANTES_H
+#define CONSTANTES_H
+
+#define TAILLE_MAX_TABLEAU 1000
+
+#endif

@@ -1,40 +1,72 @@
-# Makefile pour la production des fichiers objets et de l'executable
-#Les headers sont dans le dossier headers
-#Les sources sont dans le dossier sources
-#Les objets seront crées dans le dossier obj qui sera crée automatiquement si il n'existe pas
-#L'executable sera crée dans le dossier bin qui sera crée automatiquement si il n'existe pas
-#Pour compiler il suffit de taper make dans le terminal
+# Makefile
 
-# Variables
+# Compiler
 CC = gcc
-CFLAGS = -Wall -Wextra -g
-LDFLAGS = -lm
-EXEC = prog
-SRC = $(wildcard sources/*.c)
-OBJ = $(SRC:.c=.o)
-OBJDIR = obj
-OBJ := $(addprefix $(OBJDIR)/, $(notdir $(OBJ)))
-HEADERS = $(wildcard headers/*.h)
-BINDIR = bin
 
-# Règles
-all: $(EXEC)
+# Header directory
+HEADER = include
 
-$(EXEC): $(OBJ)
-	@mkdir -p $(BINDIR)
-	$(CC) -o $(BINDIR)/$@ $^ $(LDFLAGS)
+# Source directory
+SRC = src
 
-$(OBJDIR)/%.o: sources/%.c $(HEADERS)
-	@mkdir -p $(OBJDIR)
-	$(CC) -o $@ -c $< $(CFLAGS)
+# Object directory
+OBJ = obj
 
+# Binary directory
+BIN = bin
 
-# supprime les dossiers obj et bin
+# Flags
+OBJFLAGS = -c -I$(HEADER)
+CFLAGS = -I$(HEADER)
+
+# Source files dans le répertoire src et ses sous-répertoires
+SRCFILES = $(shell find $(SRC) -name "*.c")
+
+# Object files
+OBJFILES = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCFILES))
+
+# Binary file
+BINFILE = $(BIN)/prog
+
+# Default target
+all: $(BINFILE)
+
+# Creating object files with subdirectories
+$(OBJ)/%.o: $(SRC)/%.c
+	@mkdir -p $(@D)
+	$(CC) $(OBJFLAGS) $< -o $@
+
+# Linking
+$(BINFILE): $(OBJFILES)
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Clean
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
+	rm -rf $(OBJ) $(BIN)
 
-# supprime les dossiers obj et bin et recompile
-re: clean all
+# Run
+run:
+	$(BINFILE)
 
-test: re
-	./$(BINDIR)/$(EXEC) < hhhh | display
+# Debug
+debug:
+	gdb $(BINFILE)
+
+# Valgrind
+valgrind:
+	valgrind --leak-check=full $(BINFILE)
+
+# Help
+help:
+	@echo "all: Compile and link the program"
+	@echo "clean: Remove object files and binary file"
+	@echo "run: Run the program"
+	@echo "debug: Run the program in debug mode"
+	@echo "valgrind: Run the program with valgrind"
+	@echo "help: Display this help"
+
+# Phony targets
+.PHONY: all clean run debug valgrind help
+
+# End of Makefile

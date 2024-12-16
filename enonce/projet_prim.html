@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0069)https://web4.ensiie.fr/~guillaume.burel/cours/PRIM11/projet_2022.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   
+   <link rel="stylesheet" type="text/css" href="./projet_prim_files/empty.css">
+   <title>Projet PRIM11</title>
+</head>
+<body>
+<h1>
+Programmation impérative, projet 2022
+</h1>
+<h3>Dates et principe</h3>
+Cette page peut être mise à jour, avec informations complémentaires,
+précisions, <em><a href="https://web4.ensiie.fr/~guillaume.burel/cours/PRIM11/projet_2022.html#bonus">questions
+	bonus</a></em>, etc. Pensez à y revenir souvent.<br>
+<hr>
+Projet à rendre pour le <b>8/1/2022</b> à <b>23h59</b>, aucun retard ne sera toléré.<br>
+Des soutenances pourront potentiellement être organisées ensuite.<br><br>
+<br><br>  
+<b>Lire tout le sujet.</b><br><br>
+
+Un rendu de projet comprend :
+<ul>
+<li> Un rapport typographié précisant vos choix, les problèmes
+  techniques qui se posent et les solutions trouvées ; il présente en
+  introduction le contexte et le sujet du projet, et il précise en
+  conclusion les limites de votre programme. Le rapport sera de
+  préférence composé avec <span style="font-family:serif;margin-right:-.7em">L<span style="font-size:0.9em;position:relative;top:-.1em;left:-0.4em;">A</span><span style="position:relative;left:-.5em;">T</span><span style="position:relative;top:.2em;left:-.6em;">E</span><span style="position:relative;left:-.7em;">X</span></span>. Le soin apporté à la grammaire et à
+  l'orthographe est largement pris en compte.</li>
+<li> Un code <em>abondamment</em> commenté ; la première partie des
+  commentaires comportera systématiquement les lignes :<br>
+<ol>
+<li><tt>@ requires </tt> décrivant les préconditions : c'est-à-dire
+conditions sur les paramètres pour une bonne utilisation (<b>pas de
+  typage ici</b>),</li>
+<li><tt>@ assigns </tt> listant les zones de mémoire modifiées,</li>
+<li><tt>@ ensures </tt>  décrivant la propriété vraie à la sortie de la
+fonction lorsque les préconditions sont respectées, le cas échéant
+avec mention des comportements en cas de succès et en cas d'échec,</li>
+</ol>
+En outre chaque boucle <tt>while</tt> doit contenir un commentaire
+précisant la raison de sa terminaison (le cas échéant). De même en
+cas d'appels récursifs.<br>  On pourra
+préciser des informations additionnelles si des techniques
+particulières méritent d'être mentionnées.
+<br><br>
+Le code doit enfin compiler sans erreur (évidemment) et sans warning lorsque
+l'option <tt>-Wall</tt> est utilisée.
+
+<b>Un code qui ne compile pas
+se verra attribuer la note de 0.</b><p></p></li>
+<li>Un manuel d'utilisation de votre exécutable, même minimal, est toujours bienvenu.</li>
+</ul>
+Avez-vous lu tout le sujet ?
+
+<hr>
+<h4>Protocole de dépôt</h4>
+<p>
+  Vous devez rendre 
+  </p><ul> 
+    <li> votre rapport (en pdf) et</li> 
+    <li> vos fichiers de code</li>
+  </ul>
+  rassemblés dans une archive tar gzippée identifiée
+  comme <em>votre_prénom_votre_nom</em><tt>.tgz</tt>.<br>  La commande
+  devrait ressembler à :<br>
+  <tt>tar zcvf randolph_carter.tgz rapport.pdf fichiers.c
+    autres_trucs_éventuels.c</tt>…<br>
+  <b>N'OUBLIEZ surtout PAS de mettre le nom identifiant l'archive</b>
+  (donc nouveau) <b>en PREMIER.</b><br>
+  <b>Lisez le man !</b> et testez le contenu de votre archive (une
+  commande comme par exemple&nbsp;:<br> <tt>tar tvf
+  randolph_carter.tgz</tt> doit lister les fichiers et donner leur
+  taille).
+  <ul>
+    <li><b>Une archive qui ne contient pas les fichiers demandés ne
+	sera pas excusable.</b></li>
+    <li><b>**Une archive qui n'est pas au format demandé</b> (archive
+    tar gzippée avec suffixe .tgz) <b>ne sera
+	pas corrigée**</b> donc c'est 0/20.</li>
+  </ul>
+<p></p>
+<p>
+  <!-- <em>La procédure pour déposer votre dossier vous sera communiquée -->
+  <!-- ultérieurement.</em> -->
+</p><p>Toute tentative de fraude (plagiat, etc.) sera sanctionnée. Si
+  plusieurs projets ont <b>des sources trop similaires</b> (y compris
+  sur une partie du code uniquement), <em>tous</em> leurs auteurs se
+  verront attribuer la note 0/20. En particulier, il faudra prendre
+  soin de ne pas publier son travail sur un dépôt public (en tout cas
+  pas avant la date de fin de rendu). On évitera également de demander
+  (ou de donner) des conseils trop précis à ses camarades (y compris
+  des promotions précédentes), ces conseils ayant pu être donnés à
+  plusieurs personnes. Les rendus seront comparés deux à deux.
+
+</p>
+<p>
+<b>Procédure de dépôt</b><br> Vous devez enregistrer
+votre archive tgz dans le dépôt dédié au cours PRIM11 (prim11-2022) en vous
+connectant à <a href="http://exam.ensiie.fr/">http://exam.ensiie.fr</a>. Ce dépôt sera ouvert
+jusqu'au 8 janvier inclus.
+</p>
+
+<hr>
+
+<h3>Contexte</h3>
+<p>Le but de ce projet est d'implémenter un interpréteur pour un petit
+  langage graphique.
+</p>
+  <h3>Interface</h3>
+<p>L'exécutable final devra lire sur l'entrée standard un fichier qui
+  contient la taille de l'image à calculer, puis une série de
+  caractères qui indiqueront comment construire l'image. L'image
+  calculée sera ensuite écrite sur la sortie standard sous la forme
+  d'un <a href="https://fr.wikipedia.org/wiki/Portable_pixmap">fichier
+  PPM</a>.
+</p>
+
+<p>Si le programme final s'appelle <code>prog</code>, et qu'on a un
+  fichier d'entrée nommé <code>test.ipi</code>, il devrait être
+  possible d'entrer la commande
+</p><pre>./prog &lt; test.ipi | display    
+</pre>
+pour calculer l'image décrite dans <code>test.ipi</code> et l'afficher
+en utilisant la visionneuse d'<a href="https://imagemagick.org/">Image Magick</a>.
+
+<h3>État de la machine</h3>
+<p>Le calcul de l'image à produire se fait à l'aide d'une machine à
+  états. On dispose de jusqu'à dix calques surposés, chacun étant de
+  la taille de l'image à produire. On peut déplacer un curseur sur le
+  calque du dessus, et tracer des lignes entre la position courante et
+  la dernière position marquée. On peut aussi remplir la couleur à la
+  position du curseur, comme avec l'outil « remplissage »
+  <img src="./projet_prim_files/fill.svg"> des
+  outils d'imagerie courants. La couleur à utiliser est déterminée à
+  l'aide d'un seau dans lequel on peut ajouter des doses de couleurs
+  de bases ; la couleur courante est alors la moyenne des couleurs
+  contenues dans le seau. Un autre seau contiendra des doses
+  d'opacité, ce qui permettra de calculer l'opacité courante.<br>
+
+  Un état de cette machine sera constitué des éléments
+suivants&nbsp;:
+  </p><ul>
+    <li>deux entiers indiquant la position courante du curseur&nbsp;;
+    </li>
+    <li>deux entiers indiquant la dernière position marquée&nbsp;;
+    </li>
+    <li>un élément qui indique la direction du curseur&nbsp;; celle-ci
+      peut être Nord, Est, Sud ou Ouest&nbsp;;
+    </li>
+    <li>un multiensemble de couleurs qui représente le seau dans lequel
+      sont mélangées des doses de couleurs pour produire la couleur
+      courante&nbsp;;
+    </li>
+    <li>un multiensemble d'opacités qui représente le seau dans lequel
+      sont mélangées des doses d'opacités pour produire l'opacité
+      courante&nbsp;;
+    </li>
+    <li>une pile de calques de taille au plus 10, chaque calque étant
+    une grille de pixels de la taille de l'image à produire.</li>
+  </ul>
+<p>On aura besoin des types de données suivants&nbsp;:</p>
+<ul><li>Une composante est un entier non signé sur 1 octet.</li>
+
+<li>Une couleur est formée de trois composantes pour le rouge, le
+  vert et le bleu.</li>
+
+<li>Une opacité est donnée par une composante&nbsp;; 0 correspond
+  à la transparence totale, tandis que 255 correspond à l'opacité
+  totale.</li>
+<li>Un pixel est formé par une couleur et une opacité.</li>
+<li>Un calque est une grille carrée de pixels, de la taille de l'image
+  à produire au final.</li>
+</ul>
+
+<p>Initialement, l'état de la machine est le suivant&nbsp;:</p>
+<ul>
+  <li>les positions courante et marquée sont toutes les deux en (0,0)&nbsp;;</li>
+  <li>la direction est Est&nbsp;;</li>
+  <li>les seaux de couleurs et d'opacités sont vides tous les deux&nbsp;;</li>
+  <li>la pile contient un seul calque&nbsp;; chaque pixel de ce calque
+  est formé de la couleur (0,0,0) et de l'opacité 0.</li>
+</ul>
+
+<h4><a id="currentpix">Calcul du pixel courant</a></h4><a id="currentpix">
+<p>Le pixel courant correspondant au contenu des seaux est calculé de la
+  façon suivante&nbsp;:</p>
+<ul>
+  <li>on fait la moyenne (entière) des opacités du seau d'opacités, ce
+  qui nous donne l'opacité courante&nbsp;;</li>
+  <li>si ce seau est vide, on prend 255 comme
+  valeur pour l'opacité courante&nbsp;;</li>
+  <li>on fait la moyenne (entière) de chacune des composantes des
+  couleurs contenues dans le seau de couleurs&nbsp;;</li>
+  <li>la valeur de chaque composante de la couleur du pixel courant
+  est alors cette moyenne multipliée par l'opacité calculée
+  précédemment puis divisée par 255&nbsp;;</li>
+  <li>si le seau de couleurs est vide, on prend comme
+    valeur 0 pour chacune des composantes de la couleur courante.</li>
+</ul>
+
+<p>Par exemple, si le seau de couleurs contient deux doses de rouge
+  (255,0,0) et une
+dose de jaune (255,255,0), et que le seau d'opacités contient une dose d'opacité complète (255) et une
+dose de transparence totale (0), la moyenne des doses d'opacité sera
+de 127. La moyenne des composantes des doses de couleur sera
+(255,85,0). Le pixel courant aura donc pour couleur (127, 42, 0) et
+pour opacité 127.</p>
+
+<h3>Format d'entrée</h3>
+<p>Le format proposé est composé d'une première ligne, qui contient un
+entier donné en mode texte. Cet entier correspond à la largeur et la
+hauteur de l'image qui sera produite. (Celle-ci est donc carrée.)
+</p>
+<p>La suite du fichier contient des caractères dont certains modifieront
+l'état de la machine &nbsp;:
+</p>
+<dl>
+  <dt><code>n</code></dt>
+  <dd>Ajoute la couleur noire (c'est-à-dire (0,0,0)) dans le seau de couleurs.</dd>
+
+  <dt><code>r</code></dt>
+  <dd>Ajoute la couleur rouge (c'est-à-dire (255,0,0)) dans le seau de couleurs.</dd>
+
+  <dt><code>g</code></dt>
+  <dd>Ajoute la couleur verte (c'est-à-dire (0,255,0)) dans le seau de couleurs.</dd>
+
+  <dt><code>b</code></dt>
+  <dd>Ajoute la couleur bleue (c'est-à-dire (0,0,255)) dans le seau de couleurs.</dd>
+
+  <dt><code>y</code></dt>
+  <dd>Ajoute la couleur jaune (c'est-à-dire (255,255,0)) dans le seau de couleurs.</dd>
+
+  <dt><code>m</code></dt>
+  <dd>Ajoute la couleur magenta (c'est-à-dire (255,0,255)) dans le seau de couleurs.</dd>
+
+  <dt><code>c</code></dt>
+  <dd>Ajoute la couleur cyan (c'est-à-dire (0,255,255)) dans le seau de couleurs.</dd>
+  <dt><code>w</code></dt>
+  <dd>Ajoute la couleur blanche (c'est-à-dire (255,255,255)) dans le seau de couleurs.</dd>
+
+  <dt><code>t</code></dt>
+  <dd>Ajoute l'opacité transparente (0) dans le seau d'opacités.</dd>
+
+  <dt><code>o</code></dt>
+  <dd>Ajoute l'opacité complète (255) dans le seau d'opacités.</dd>
+
+  <dt><code>i</code></dt>
+  <dd>Vide les seaux de couleurs et d'opacité.</dd>
+
+  <dt><code>v</code></dt>
+  <dd>Avance la position du curseur d'un pas dans la direction
+  courante&nbsp;; si le bord de l'image est atteint, on repasse de
+  l'autre coté.</dd>
+
+  <dt><code>h</code></dt>
+  <dd>Tourne la direction courante dans le sens horaire.</dd>
+
+  <dt><code>a</code></dt>
+  <dd>Tourne la direction courante dans le sens anti-horaire.</dd>
+
+  <dt><code>p</code></dt>
+  <dd>Met à jour la position marquée en y mettant la position
+    actuelle du curseur.</dd>
+
+  <dt><code>l</code></dt>
+  <dd>Trace une ligne entre la position du curseur et la position
+    marquée, en utilisant l'algorithme décrit ci-dessous.</dd>
+
+  <dt><code>f</code></dt>
+  <dd>Remplit la zone de même couleur autour du curseur, en la
+  remplaçant par la couleur courante, à l'aide de l'algorithme décrit
+  ci-dessous.</dd>
+
+  <dt><code>s</code></dt>
+  <dd>Ajoute un nouveau calque dans la pile de calques&nbsp;; chaque
+  pixel de ce nouveau calque sera formé de la couleur (0,0,0) et de
+  l'opacité 0&nbsp;; s'il y a déjà 10 calques dans la pile, ne fait rien.</dd>
+
+  <dt><code>e</code></dt>
+  <dd>Fusionne les deux calques les plus hauts dans la pile, comme
+  décrit ci-dessous&nbsp;; il y aura donc un calque de moins dans la
+  pile&nbsp;; s'il n'y a qu'un seul calque, ne fait rien.</dd>
+
+  <dt><code>j</code></dt>
+  <dd>Découpe le calque situé juste en dessous du sommet de la pile en
+  utilisant comme masque les opacités de celui au sommet
+  (cf. ci-dessous)&nbsp;; retire celui au sommet&nbsp;; s'il n'y a
+  qu'un seul calque, ne fait rien.</dd>
+</dl>
+<p>Les autres caractères seront ignorés, y compris les versions
+  en majuscule des caractères ci-dessus.</p>
+<h4>Tracé de lignes</h4>
+
+<p>Pour tracer une ligne entre la position (x0, y0) à la position (x1,
+y1), on utilisera l'algorithme suivant&nbsp;: (<code>|x|</code>
+  représente la valeur absolue de <code>x</code>, toutes les
+  opérations se font sur les entiers)</p>
+
+<pre>δx := x1 - x0
+δy := y1 - y0
+d := max(|δx|, |δy|)
+si δx et δx sont non nuls et de même signe
+alors s := 0
+sinon s := 1
+x := x0 * d + (d - s) / 2
+y := y0 * d + (d - s) / 2
+répéter d fois
+  changer le pixel en (x/d, y/d) par le pixel courant
+  x := x + δx
+  y := y + δy
+changer le pixel en (x1, y1) par le pixel courant
+</pre>
+
+</a><p><a id="currentpix">Le pixel courant est celui correspondant aux seaux, cf. </a><a href="https://web4.ensiie.fr/~guillaume.burel/cours/PRIM11/projet_2022.html#currentpix">supra</a>.</p>
+
+<h4>Remplissage</h4>
+<p>Pour remplir une zone de couleur depuis la position (x,y) sur le
+  calque <code>calque</code>, on appellera la
+  fonction <code>fill</code> décrite ci-dessous avec comme paramètres
+  <code>x, y, calque[x,y], courant, calque</code>
+  où <code>courant</code> est le <a href="https://web4.ensiie.fr/~guillaume.burel/cours/PRIM11/projet_2022.html#currentpix">pixel courant</a>, à condition que ce
+  pixel courant soit différent de celui déjà en (x,y), sinon on
+  ne fait rien.</p>
+
+<pre>fonction fill(x, y, ancien, nouveau, calque)
+  si calque[x,y] = ancien
+  alors
+    calque[x,y] := nouveau
+    si x &gt; 0 alors fill(x-1, y, ancien, nouveau, calque)
+    si y &gt; 0 alors fill(x, y-1, ancien, nouveau, calque)
+    si x &lt; size-1 alors fill(x+1, y, ancien, nouveau, calque)
+    si y &lt; size-1 alors fill(x, y+1, ancien, nouveau, calque)
+</pre>
+<p>où <code>size</code> est la taille de l'image à produire.</p>
+<p>Remarque : sur de grands calques, une implémentation récursive de
+  la fonction <code>fill</code> comme décrit ci-dessus peut conduire à
+  des dépassements de pile. Vous devrez plutôt utiliser une pile
+  explicite dans laquelle vous mettrez l'ensemble des positions qu'il
+  reste encore à traiter.</p>
+
+<h4>Fusion de calques</h4>
+<p>Pour fusionner deux calques c0 et c1, on procède de la manière
+  suivante pour chacun des pixels du nouveau calque&nbsp;:</p>
+<ul>
+  <li>on note α0 l'opacité de c0 à cette position&nbsp;;</li>
+  <li>la valeur de chacune des composantes du nouveau pixel (couleur
+  et opacité) vaut celle en c0 plus (celle en c1 fois (255 - α0)
+  divisé par 255).
+</li></ul>
+
+<p>Par exemple, si le pixel de c0 a pour couleur (127, 42, 0) et pour
+  opacité 127, et que celui en c1 a pour couleur (0, 100, 200) et pour
+  opacité 200, le pixel de la fusion aura pour couleur (127, 92, 100)
+  et pour opacité 227.</p>
+
+<p>Remarque&nbsp;: il n'y a pas de dépassement de capacité pour les
+  nouvelles composantes, parce que de la façon dont est calculé le
+  pixel courant, les composantes des couleurs ne peuvent pas être plus
+  grandes que la composante de l'opacité.</p>
+
+<h4>Découpage de calques</h4>
+<p>Pour découper un calque c1 en utilisant l'opacité d'un calque c0
+  comme masque, on procède de la manière
+  suivante pour chacun des pixels du nouveau calque&nbsp;:</p>
+<ul>
+  <li>on note α0 l'opacité de c0 à cette position&nbsp;;</li>
+  <li>la valeur de chacune des composantes du nouveau pixel (couleur
+  et opacité) vaut celle en c1 fois α0 divisé par 255.
+</li></ul>
+
+<p>Par exemple, si le pixel de c0 a pour couleur (127, 42, 0) et pour
+  opacité 127, et que celui en c1 a pour couleur (0, 100, 200) et pour
+  opacité 200, le pixel de la fusion aura pour couleur (0, 49, 99)
+  et pour opacité 99.</p>
+
+<h4>Production de l'image finale</h4>
+<p>Une fois l'entrée complètement lue, on prendra le calque situé en
+  haut de la pile pour obtenir l'image finale. On ne prendra en compte
+  que les couleurs et on oubliera donc l'opacité.</p>
+<p>On écrira sur la sortie standard l'image correspondante au format
+  PPM vu en cours.</p>
+
+<h3>Exemples</h3>
+
+On trouvera dans le
+fichier <a href="https://web4.ensiie.fr/~guillaume.burel/cours/PRIM11/exemples_ipi_2022.tgz">exemples_ipi_2022.tgz</a> un
+certains nombres de fichiers d'entrées
+(<em>exemple</em><code>.ipi</code>) avec l'image devant être produite
+(<em>exemple</em><code>.ppm</code>), afin que vous puissiez tester
+votre programme.
+
+<p>D'autres exemples seront possiblement proposés d'ici la date de rendu.
+</p>
+
+<p>Lors de la correction, votre programme sera testé avec des exemples
+  qui n'auront pas été fournis à l'avance&nbsp;; faire passer les
+  exemples ne suffira donc pas, il faudra bien respecter la
+  spécification.</p>
+<h3><a id="bonus">Bonus</a></h3>
+<ul>
+  <li>
+    Permettre au programme de prendre des arguments en ligne de
+    commande :
+    <ul>
+      <li>si un premier argument est fourni, ce sera le nom d'un fichier qui
+	sera lu en entrée à la place de l'entrée standard ;</li>
+      <li>si un deuxième argument est fourni, ce sera le nom d'un fichier qui
+	sera écrit en sortie à la place de la sortie standard ;</li>
+      <li>les autres arguments seront ignorés, avec un avertissement
+	sur la sortie d'erreur standard.</li>
+      </ul>
+  </li>
+  <li>Ajouter une interface graphique qui montre la construction de
+  l'image au fur et à mesure de son calcul.</li>
+</ul>
+
+<h3>Conseils</h3> <p>Pour la récupération d'une entrée de l'utilisateur,
+plutôt que faire un <tt>scanf</tt> directement, il vaut parfois mieux
+récupérer une ligne en entier avec <tt>fgets</tt> puis
+utiliser <tt>sscanf</tt> dessus&nbsp;; on peut utiliser la suite de
+commandes suivantes&nbsp;:
+</p><pre>char buf[256];
+ .
+ .
+ .
+fgets(buf, 256, stdin);
+sscanf(buf, "format", ...);
+</pre>
+<p></p>
+<p>Pour lire un seul caractère, on pourra
+  utiliser <code>getc</code>, qui renvoie <code>EOF</code> en cas
+  d'erreur ou en fin de fichier.</p>
+<p>Il pourra être opportun d'utiliser certaines fonctions de la
+  bibliothèque standard comme <code>memcpy</code>
+  ou <code>memset</code>. Se reporter aux pages de manuel pour leur
+  fonctionnement.</p>
+<p>Vous devez avoir lu jusqu'ici avant de commencer.</p>
+
+
+
+
+
+
+
+
+
+<div id="torrent-scanner-popup" style="display: none;"><template shadowrootmode="open"><link rel="stylesheet" href="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/css/custom.css"><div id="yf-bt-wrapper" class="free"><div class="header"><img class="sts-logo" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/ts-free-logo.png"><div class="search-content"><input id="search-input" class="search-input" type="search" placeholder="Start your search here..."><span id="search-btn" class="search-btn"></span></div></div><div class="container"><div class="main-container"><div id="torrent-data" class="torrent-content"><div class="t-table"><div class="t-header"><div class="t-name">Torrent search results</div></div><div id="checked-sites" class="checked-sites-section"><div class="left">Checked Sites</div><div class="right"><span id="sites-count" class="sites-count">0</span></div></div><div id="table-body" class="t-body"><div id="loading" class="spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div><div class="table-message-container" id="table-message"><p>No items to list <br> Use the search bar above for instant results</p></div></div></div></div><div class="tooltip"><p class="tooltip-text">To see search results, type here and hit `Enter`</p></div><div class="footer"><span><span id="numberScanned" class="numberScanned">No results</span></span></div><div class="upgradeProPanel"><div class="upgradeProPanelTitle">Try our Torrent Scanner Plus to unlock:</div><div class="upgradeProPanelList"><div><p>Faster Results</p></div><div><p>Unlimited Search Results with detailed torrent info</p></div><div><p>Secure Torrenting</p></div></div><a class="upgrade-to-pro-button-2" id="buy-pro" href="https://shop.lavasoft.com/clickgate/join.aspx?ref=shop.lavasoft.com&amp;ujid=W9yhyAwEW5Q%3D" target="_blank">Get Torrent Scanner +</a></div></div><div class="sync-container nav-se-container"><div class="nav-se-content"><img class="sync-icon nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-sync.svg"><div class="nav-se-title">One more step to go before you start torrenting!</div><p class="nav-se-text">This extension can sync results with BitTorrent and/or uTorrent for instant downloading.</p><p class="nav-se-text">To activate this feature, please click on the button below, and then on the Chrome message to activate the 'Messaging Permission'.</p><button class="sync-permission-btn nav-se-btn">Activate Messaging Permission</button></div><div class="nav-se-content display-none"><img class="sync-icon nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-sync.svg"><div class="nav-se-title">Syncing...</div><p class="nav-se-text">Please allow Messaging Permissions in the proceeding Chrome message.</p></div><div class="nav-se-content display-none"><img class="sync-icon nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-success.svg"><div class="nav-se-title">Sync Complete</div><p class="nav-se-text">You have successfully activated the “Messaging Permission” feature. All your search results will sync with BitTorrent and/or uTorrent.</p></div></div><div class="license-container nav-se-container"><div class="nav-se-content"><img class="nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-key2.svg"><div class="nav-se-title">Enter License Key</div><p class="nav-se-text">Enter your license key and click on the activate button to start using <span>Torrent Scanner Plus.</span></p><input type="text" id="license-input-key" class="license-input-key" placeholder="Enter Key"><div class="license-spinner"><div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div><button id="license-activate-button" class="license-activate-button nav-se-btn">Activate</button><p>Don't have a license key? <a class="license-buy-link" target="_blank">Click here</a></p></div><div class="nav-se-content display-none"><img class="nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-success.svg"><div class="nav-se-title">Happy Torrenting!</div><p class="nav-se-text">You are now an active PRO user</p><p class="nav-se-text">Your key is valid until <span class="expiry-date"></span></p></div><div class="nav-se-content display-none"><img class="nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-alert.svg"><div class="nav-se-title">Your license key has expired</div><p class="nav-se-text">Looks like your license key has expired, to renew your PRO license key, please select a license type:</p><a class="upgrade-to-pro-button-2 buy-license-expiry-button" href="https://shop.lavasoft.com/clickgate/join.aspx?ref=shop.lavasoft.com&amp;ujid=W9yhyAwEW5Q%3D" target="_blank">Buy Torrent Scanner +</a><p class="nav-se-text">Already have a license key? <a class="link" id="show-license-panel">Click here</a></p></div><div class="nav-se-content display-none"><img class="nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-success.svg"><p class="nav-se-text">Your key is valid until <span class="expiry-date"></span></p><p class="nav-se-text">Your License Key:</p><p class="nav-se-text"></p><p class="nav-se-text margin-top-50">Switch back to Torrent Scanner Free?</p><button class="activate-free-btn nav-se-btn">Revert to Free Version</button></div></div><div class="feedback-container nav-se-container"><div class="nav-se-content"><img class="nav-se-icon" src="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/img/assets/icon-feedback.svg"><div class="nav-se-title">Feedback</div><p class="nav-se-text">Help us improve Torrent Scanner, send us comments, bugs, feedback, and suggestions.</p><button id="feedback-button" class="feedback-button nav-se-btn">Send Feedback</button></div></div><div class="settings-container nav-se-container"><div class="nav-se-content"><div class="settings-title">Settings</div></div><div class="s-table"><div class="s-row"><div class="s-title">FAQ<div class="s-arrow"><span class="arrow-down"></span></div></div><div class="s-content faq-content"><p class="faq-text">FAQ: <a href="chrome-extension://aegnopegbbhjeeiganiajffnalhlkkjb/faq.html" target="_blank">Click here</a></p></div></div><div class="s-row"><div class="s-title">Rate the extension<div class="s-arrow"><span class="arrow-down"></span></div></div><div class="s-content"><p class="rate-text">How did you like the extension experience?</p><div class="rating"><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">★</span><span class="rating-star">★</span></div><button class="rating-btn nav-se-btn" disabled="">Submit</button></div></div><div class="s-row"><div class="s-title">About<div class="s-arrow"><span class="arrow-down"></span></div></div><div class="s-content about-content"><div class="about-version">Version 1.4.0 <br><br> What's New</div><div class="about-new"><p></p><ul><li>Experience a complete new User Interface of the extension. It is enhanced and user friendly now.</li><li>Squashed some bugs.</li></ul><p></p></div></div></div><div class="s-row"><div class="s-title">Privacy Policy<div class="s-arrow"><span class="arrow-down"></span></div></div><div class="s-content"><div class="policy-text">Adaware Software (7270356 Canada Inc.) is the operator of the Adaware products suites and related services (the “<b>Company</b>”, ”<b>we</b>” or “<b>us</b>”). We respect your privacy rights and we are committed to protecting them. This privacy policy (“<b>Privacy Policy</b>” or simply “<b>policy</b>”) governs our products, services and websites that link to this Privacy Policy, and describes our practices of processing data from you. By “<b>you</b>”, we refer to either or all of the following: (i) visitors to our websites that links to this Privacy Policy (“<b>Visitor</b>” and “<b>Website</b>”, respectively); (ii) our customers using our software products and Services (“<b>User</b>”); and (c) a business customer, a business partner that has a contractual relationship with us or a prospective customer that is yet to be engaged in a contract with us (“Business Customer”). Unless explicitly mentioned otherwise, the information in this Privacy Policy refers to any and all data subject types (“you” or “your’). <br><br> For the purpose of this policy, the “<b>Service(s)</b>” shall include any software licensed by the Company, including features offered by or within the installed software or additional software scripts available therein (either downloaded from one of our websites, pre-installed on your device, downloaded through a third party website, obtained on a physical medium, or otherwise), or services provided through and/or on top such software, services offered on our websites, communication forums, support services, account operation, updates, enhancements, new features, premium support, extended guarantees, online version and free versions of a software or additional services or features as we ay make available from time to time. <br><br> If you are a California resident, please also see our <a href="https://www.adaware.com/CCPA/" target="_blank">CCPA Notice</a>. <br><br> <a href="https://www.adaware.com/privacy-policy/" target="_blank">Read more</a></div></div></div><div class="s-row" style="display: none;"><div class="s-title">Contact Us<div class="s-arrow"><span class="arrow-down"></span></div></div><div class="s-content"><div class="contact-text">For any payment and order-related support, please contact us at Email: <a href="mailto:support@torrentscanner.zendesk.com">support@torrentscanner.zendesk.com</a> or <a href="mailto:pcsoftwareinfo.com">pcsoftwareinfo.com</a><br><br>Phone: <a href="https://pcsoftwareinfo.com/contact.aspx" target="_blank">Click here</a></div></div></div></div></div></div><div class="nav"><button id="btnSync" class="nav-btn">Sync</button><button id="btnLicense" class="nav-btn">License</button><button id="btnHome" class="nav-btn">Home</button><button id="btnFeedback" class="nav-btn">Feedback</button><button id="btnSettings" class="nav-btn">Settings</button></div></div></template></div></body></html>
